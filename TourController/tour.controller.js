@@ -6,7 +6,8 @@ const {
     getAllTourServices,
     getTourByIdService,
     updateTourByIdService,
-    getCheapestTourServices
+    getCheapestTourServices,
+    getTrendingTourServices
 } = require("../services/tour.services");
 
 
@@ -26,6 +27,17 @@ module.exports.allTours = async (req, res) => {
 module.exports.cheapestTours = async (req, res) => {
     try {
         const cheapestTours = await getCheapestTourServices();
+        res.status(200).json(cheapestTours);
+    } catch (err) {
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+        })
+    }
+}
+module.exports.trendingTours = async (req, res) => {
+    try {
+        const cheapestTours = await getTrendingTourServices();
         res.status(200).json(cheapestTours);
     } catch (err) {
         res.status(500).json({
