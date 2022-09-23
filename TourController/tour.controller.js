@@ -15,7 +15,35 @@ const {
 
 module.exports.allTours = async (req, res) => {
     try {
-        const allTours = await getAllTourServices();
+        const filter = {
+            ...req.query
+        }
+        excludedArray = ['limit', 'fields', 'sort', 'page'];
+        const query = {};
+        excludedArray.forEach(tour => delete filter[tour]);
+        console.log('main object', req.query);
+        console.log('excluded object', filter);
+        if (req.query.sort) {
+            const sort = req.query.sort;
+            const sortBy = sort.split(',').join(' ');
+            query.sortBy = sortBy;
+        }
+        if (req.query.fields) {
+            const fields = req.query.fields;
+            const selectBy = fields.split(',').join(' ');
+            query.selectBy = selectBy;
+        }
+        if (req.query.page) {
+            const {
+                page = 1, limit = 2
+            } = req.query;
+            const skip = (parseInt(page) - 1) * parseInt(limit);
+            query.skip = skip;
+            query.limit = limit;
+
+        }
+
+        const allTours = await getAllTourServices(filter, query);
         res.status(200).json(allTours);
     } catch (err) {
         res.status(500).json({

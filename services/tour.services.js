@@ -4,8 +4,8 @@ exports.createTourService = async (data) => {
     const tour = await Tour.create(data);
     return tour;
 }
-exports.getAllTourServices = async () => {
-    const allTours = await Tour.find();
+exports.getAllTourServices = async (filter, query) => {
+    const allTours = await Tour.find(filter).skip(query.skip).limit(query.limit).select(query.selectBy).sort(query.sortBy);
     return allTours;
 }
 exports.getCheapestTourServices = async () => {
